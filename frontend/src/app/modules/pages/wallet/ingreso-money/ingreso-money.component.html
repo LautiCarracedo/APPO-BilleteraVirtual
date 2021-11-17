@@ -1,0 +1,177 @@
+<header>
+  <nav id="navmenu" class="navbar">
+    <div class="container">
+
+      <div class="navbtns">
+        <a [routerLink]="['/wallet']">INICIO</a>
+
+        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          CUENTAS
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <li><a [routerLink]="['/wallet']" class="dropdown-item">CUENTA EN PESOS</a></li>
+          <li><a [routerLink]="['/not-found']" class="dropdown-item">CUENTA EN DÓLARES</a></li>
+          <li><a [routerLink]="['/not-found']" class="dropdown-item">CUENTA DE CRIPTOMONEDA</a></li>
+        </ul>
+
+        <a [routerLink]="['/transfer']">TRANSFERENCIAS</a>
+        <a [routerLink]="['/pay-services']">PAGAR SERVICIOS</a>
+        <a [routerLink]="['/home']">SALIR</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<br />
+
+<!-- Botones -->
+<div class="login container p-3">
+  <div class="row">
+    <div class="d-inline-flex p-2 bd-highlight justify-content-center">
+      <p class="h2">¿COMO QUERES INGRESAR DINERO?</p>
+    </div>
+  </div>
+
+
+  <div class="row justify-content-center botones">
+    <div class=" d-inline-flex p-2 bd-highlight justify-content-center">
+
+      <button type="button" class="button" (click)="touchButtonTransferencia()">
+        TRANSFERENCIA BANCARIA
+      </button>
+
+
+      <button type="button" class="button" (click)="touchButtonTarjeta()">
+        TARJETA DE DEBITO
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+<div class="login container p-3" *ngIf="mostrarDatosCuenta">
+  <div class="d-inline-flex p-2 bd-highlight justify-content-center">
+    <div class="row justify-content-center">
+      <p>Copia tu CVU o alias para poder dinero transferir desde otra cuenta a la tuya.</p>
+      <div class="card">
+
+        <div class="card-body" *ngFor="let dato of Datos">
+          <p>CVU</p>
+          <p>{{ dato.cvu }}</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body" *ngFor="let dato of Datos">
+          <p>Alias</p>
+          <p>{{ dato.alias }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<form [formGroup]="formIngresoMoney" (ngSubmit)="PostIngreso()">
+  <div class="login container p-3" *ngIf="mostrarDatosTarjeta">
+    <div class="row justify-content-center">
+      <div class="col-6 p-2 m-2">
+        <label class="form-label h4 px-4">Elegí el monto a ingresar</label>
+        <input type="text" class="form-control" formControlName = "monto" [class.is-invalid]="montoNoValido" ngSubmit>
+        <small *ngIf="montoNoValido" style="color: red"
+            class="text-danger d-inline-flex m-2 px-4 bd-highlight justify-content-center">Ingrese un monto
+        </small>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-6 p-2 m-2">
+        <h4>DATOS DE LA TARJETA DE DÉBITO</h4>
+        <label class="form-label h4 px-4">Nombre y apellido del titular</label>
+        <input type="text" class="form-control" formControlName="nombre_titular" [class.is-invalid]="nombreNoValido" ngSubmit>
+        <small *ngIf="nombreNoValido" style="color: red"
+            class="text-danger d-inline-flex m-2 px-4 bd-highlight justify-content-center">Ingrese nombre y apellido
+        </small>
+      </div>
+
+      <div class="col-6 p-2 m-2">
+        <label class="form-label h4 px-4">Número de tarjeta</label>
+        <input type="text" class="form-control" formControlName = "nro_tarjeta" [class.is-invalid]="nroTarjetaNoValido" ngSubmit>
+        <small *ngIf="nroTarjetaNoValido" style="color: red"
+            class="text-danger d-inline-flex m-2 px-4 bd-highlight justify-content-center">Ingrese numero de tarjeta valido. 16 digitos
+        </small>
+      </div>
+
+      <div class="col-6 p-2 m-2">
+        <label class="form-label h4 px-4">Vencimiento</label>
+        <input type="text" value="MM/AA" class="form-control" placeholder="MM/AA" formControlName = "fecha_venc" [class.is-invalid]="fechaVencNoValida" ngSubmit>
+        <small *ngIf="fechaVencNoValida" style="color: red"
+            class="text-danger d-inline-flex m-2 px-4 bd-highlight justify-content-center">Ingrese una fecha de vencimiento valida
+        </small>
+      </div>
+
+      <div class="col-6 p-2 m-2">
+        <label class="form-label h4 px-4">Codigo de Seguridad</label>
+        <input type="text" class="form-control" formControlName = "cod_seguridad" [class.is-invalid]="codSeguridadNoValido" ngSubmit>
+        <small *ngIf="codSeguridadNoValido" style="color: red"
+            class="text-danger d-inline-flex m-2 px-4 bd-highlight justify-content-center">Ingrese un codigo de seguridad valido. 3 digitos
+        </small>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="d-inline-flex p-2 bd-highlight justify-content-center">
+        <button [disabled]="formIngresoMoney.invalid" type="submit" class="button">INGRESAR DINERO</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<div class="login container p-3">
+  <div class="row">
+    <div class="d-inline-flex p-2 bd-highlight justify-content-center">
+      <p class="h2">HISTORIAL DE INGRESOS DE DINERO</p>
+    </div>
+      <p *ngFor="let ing of IngresosDinero | slice:0:4">Ingresaste $ {{ ing.monto }} a tu cuenta</p>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="d-inline-flex p-2 bd-highlight justify-content-center">
+    <button type="button" class="button center" (click)="touchButtonVerTodo()">
+      VER TODOS MIS INGRESOS
+    </button>
+  </div>
+</div>
+
+
+<div class="container-fluid" *ngIf="mostrarTodo">
+  <div class="row">
+    <div class="col-12">
+      <table id='tablaDeInversiones' class="table table-hover table-sm table-bordered table-striped">
+        <thead>
+          <tr>
+            <th class="text-center">Monto que ingresaste</th>
+            <th class="text-center">Número de tarjeta</th>
+            <th class="text-center">Nombre del titular de la tarjeta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ing of IngresosDinero">
+            <td class="text-center">$ {{ ing.monto }}</td>
+            <td class="text-center">{{ ing.nroTarjeta }}</td>
+            <td class="text-center">{{ ing.nombreTitular }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
